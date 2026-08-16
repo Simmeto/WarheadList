@@ -14,6 +14,7 @@
         const key = node.mat;
         acc[key] = (acc[key] || 0) + node.qty * mult;
       } else if (node.type === 'craft' && node.children) {
+        // Умножаем количество крафта на текущий множитель
         const childMult = node.qty * mult;
         for (const child of node.children) {
           walk(child, childMult);
@@ -31,8 +32,10 @@
   function totalRawForAllBranches(branches, warheadQty) {
     const total = {};
     for (const branch of branches) {
-      const mult = branch.qty * warheadQty;
-      const raw = collectRawFromTree(branch.tree, mult);
+      // ⚠️ КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: передаём branch.qty * warheadQty как единый множитель
+      const branchMultiplier = branch.qty * warheadQty;
+      const raw = collectRawFromTree(branch.tree, branchMultiplier);
+      
       for (const [key, value] of Object.entries(raw)) {
         total[key] = (total[key] || 0) + value;
       }
@@ -40,7 +43,7 @@
     return total;
   }
 
-  // ---------- Отрисовка дерева (рекурсивная) ----------
+  // ---------- Отрисовка дерева ----------
   function renderTree(tree) {
     let html = '<ul class="tree">';
 
@@ -52,7 +55,7 @@
               <i class="dot" style="background:${node.color}"></i>
               <span class="nm">${node.mat}</span>
               <span class="dash"></span>
-              <span class="qt">×${node.qty.toLocaleString()}</span>
+              <span class="qt">×${Number(node.qty).toLocaleString()}</span>
             </div>
           </li>
         `;
@@ -62,7 +65,7 @@
             <div class="row">
               <span class="nm">${node.name}</span>
               <span class="dash"></span>
-              <span class="qt">×${node.qty.toLocaleString()}</span>
+              <span class="qt">×${Number(node.qty).toLocaleString()}</span>
             </div>
         `;
 
@@ -76,18 +79,17 @@
                     <i class="dot" style="background:${child.color}"></i>
                     <span class="nm">${child.mat}</span>
                     <span class="dash"></span>
-                    <span class="qt">×${child.qty.toLocaleString()}</span>
+                    <span class="qt">×${Number(child.qty).toLocaleString()}</span>
                   </div>
                 </li>
               `;
             } else if (child.type === 'craft') {
-              // рекурсивный вызов для вложенных крафтов
               html += `
                 <li class="craft">
                   <div class="row">
                     <span class="nm">${child.name}</span>
                     <span class="dash"></span>
-                    <span class="qt">×${child.qty.toLocaleString()}</span>
+                    <span class="qt">×${Number(child.qty).toLocaleString()}</span>
                   </div>
               `;
               if (child.children) {
@@ -100,7 +102,7 @@
                           <i class="dot" style="background:${grandchild.color}"></i>
                           <span class="nm">${grandchild.mat}</span>
                           <span class="dash"></span>
-                          <span class="qt">×${grandchild.qty.toLocaleString()}</span>
+                          <span class="qt">×${Number(grandchild.qty).toLocaleString()}</span>
                         </div>
                       </li>
                     `;
@@ -121,7 +123,7 @@
     return html;
   }
 
-  // ---------- Скалирование дерева (умножение всех количеств) ----------
+  // ---------- Скалирование дерева для отображения ----------
   function scaleTree(node, scale) {
     if (node.type === 'raw') {
       return { ...node, qty: node.qty * scale };
@@ -172,13 +174,13 @@
     }
     branchesContainer.innerHTML = branchesHTML;
 
-    // 3. Intermediates (чипсы)
+    // 3. Intermediates
     const chipRow = document.getElementById('chipRow');
     chipRow.innerHTML = Object.entries(intermediates).map(([name, qty]) =>
       `<span class="chip">${name} <b>${(qty * warheadQty).toLocaleString()}</b></span>`
     ).join('');
 
-    // 4. Raw materials
+    // 4. Raw materials — ПРАВИЛЬНЫЙ РАСЧЁТ
     const raw = totalRawForAllBranches(branches, warheadQty);
     const totalUnits = Object.values(raw).reduce((sum, v) => sum + v, 0);
 
@@ -188,7 +190,7 @@
     spectrum.innerHTML = sortedRaw.map(([name, qty]) => {
       const pct = totalUnits > 0 ? (qty / totalUnits * 100) : 0;
       const color = materialColors[name] || '#888';
-      return `<span style="width:${pct}%;background:${color}" title="${name} ${qty.toLocaleString()}"></span>`;
+      return `<span style="width:${Math.max(pct, 0.1)}%;background:${color}" title="${name} ${qty.toLocaleString()}"></span>`;
     }).join('');
 
     // 4b. Table
