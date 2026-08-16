@@ -14,6 +14,7 @@
         const key = node.mat;
         acc[key] = (acc[key] || 0) + node.qty * mult;
       } else if (node.type === 'craft' && node.children) {
+        // ⚠️ ВАЖНО: умножаем количество крафта на множитель
         const childMult = node.qty * mult;
         for (const child of node.children) {
           walk(child, childMult);
@@ -22,7 +23,7 @@
     }
 
     for (const node of tree) {
-      walk(node, multiplier);
+      walk(node, 1); // начинаем с множителя 1, передаём multiplier через mult
     }
     return acc;
   }
@@ -31,8 +32,13 @@
   function totalRawForAllBranches(branches, warheadQty) {
     const total = {};
     for (const branch of branches) {
-      const mult = branch.qty * warheadQty;
-      const raw = collectRawFromTree(branch.tree, mult);
+      // branch.qty — это количество компонентов на 1 Warhead
+      // warheadQty — сколько Warhead нужно
+      const branchMultiplier = branch.qty * warheadQty;
+      
+      // Собираем сырьё для этой ветки
+      const raw = collectRawFromTree(branch.tree, branchMultiplier);
+      
       for (const [key, value] of Object.entries(raw)) {
         total[key] = (total[key] || 0) + value;
       }
@@ -81,7 +87,6 @@
                 </li>
               `;
             } else if (child.type === 'craft') {
-              // рекурсивный вызов для вложенных крафтов
               html += `
                 <li class="craft">
                   <div class="row">
@@ -160,6 +165,7 @@
 
     for (const branch of branches) {
       const mult = branch.qty * warheadQty;
+      // Скалируем дерево для отображения
       const scaledTree = branch.tree.map(node => scaleTree(node, warheadQty));
 
       branchesHTML += `
@@ -178,7 +184,7 @@
       `<span class="chip">${name} <b>${(qty * warheadQty).toLocaleString()}</b></span>`
     ).join('');
 
-    // 4. Raw materials
+    // 4. Raw materials — ПРАВИЛЬНЫЙ РАСЧЁТ
     const raw = totalRawForAllBranches(branches, warheadQty);
     const totalUnits = Object.values(raw).reduce((sum, v) => sum + v, 0);
 
