@@ -14,7 +14,7 @@
         const key = node.mat;
         acc[key] = (acc[key] || 0) + node.qty * mult;
       } else if (node.type === 'craft' && node.children) {
-        // ⚠️ ВАЖНО: умножаем количество крафта на множитель
+        // Умножаем количество крафта на текущий множитель
         const childMult = node.qty * mult;
         for (const child of node.children) {
           walk(child, childMult);
@@ -23,7 +23,7 @@
     }
 
     for (const node of tree) {
-      walk(node, 1); // начинаем с множителя 1, передаём multiplier через mult
+      walk(node, multiplier);
     }
     return acc;
   }
@@ -32,11 +32,8 @@
   function totalRawForAllBranches(branches, warheadQty) {
     const total = {};
     for (const branch of branches) {
-      // branch.qty — это количество компонентов на 1 Warhead
-      // warheadQty — сколько Warhead нужно
+      // ⚠️ КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: передаём branch.qty * warheadQty как единый множитель
       const branchMultiplier = branch.qty * warheadQty;
-      
-      // Собираем сырьё для этой ветки
       const raw = collectRawFromTree(branch.tree, branchMultiplier);
       
       for (const [key, value] of Object.entries(raw)) {
@@ -46,7 +43,7 @@
     return total;
   }
 
-  // ---------- Отрисовка дерева (рекурсивная) ----------
+  // ---------- Отрисовка дерева ----------
   function renderTree(tree) {
     let html = '<ul class="tree">';
 
@@ -58,7 +55,7 @@
               <i class="dot" style="background:${node.color}"></i>
               <span class="nm">${node.mat}</span>
               <span class="dash"></span>
-              <span class="qt">×${node.qty.toLocaleString()}</span>
+              <span class="qt">×${Number(node.qty).toLocaleString()}</span>
             </div>
           </li>
         `;
@@ -68,7 +65,7 @@
             <div class="row">
               <span class="nm">${node.name}</span>
               <span class="dash"></span>
-              <span class="qt">×${node.qty.toLocaleString()}</span>
+              <span class="qt">×${Number(node.qty).toLocaleString()}</span>
             </div>
         `;
 
@@ -82,7 +79,7 @@
                     <i class="dot" style="background:${child.color}"></i>
                     <span class="nm">${child.mat}</span>
                     <span class="dash"></span>
-                    <span class="qt">×${child.qty.toLocaleString()}</span>
+                    <span class="qt">×${Number(child.qty).toLocaleString()}</span>
                   </div>
                 </li>
               `;
@@ -92,7 +89,7 @@
                   <div class="row">
                     <span class="nm">${child.name}</span>
                     <span class="dash"></span>
-                    <span class="qt">×${child.qty.toLocaleString()}</span>
+                    <span class="qt">×${Number(child.qty).toLocaleString()}</span>
                   </div>
               `;
               if (child.children) {
@@ -105,7 +102,7 @@
                           <i class="dot" style="background:${grandchild.color}"></i>
                           <span class="nm">${grandchild.mat}</span>
                           <span class="dash"></span>
-                          <span class="qt">×${grandchild.qty.toLocaleString()}</span>
+                          <span class="qt">×${Number(grandchild.qty).toLocaleString()}</span>
                         </div>
                       </li>
                     `;
@@ -126,7 +123,7 @@
     return html;
   }
 
-  // ---------- Скалирование дерева (умножение всех количеств) ----------
+  // ---------- Скалирование дерева для отображения ----------
   function scaleTree(node, scale) {
     if (node.type === 'raw') {
       return { ...node, qty: node.qty * scale };
@@ -165,7 +162,6 @@
 
     for (const branch of branches) {
       const mult = branch.qty * warheadQty;
-      // Скалируем дерево для отображения
       const scaledTree = branch.tree.map(node => scaleTree(node, warheadQty));
 
       branchesHTML += `
@@ -178,7 +174,7 @@
     }
     branchesContainer.innerHTML = branchesHTML;
 
-    // 3. Intermediates (чипсы)
+    // 3. Intermediates
     const chipRow = document.getElementById('chipRow');
     chipRow.innerHTML = Object.entries(intermediates).map(([name, qty]) =>
       `<span class="chip">${name} <b>${(qty * warheadQty).toLocaleString()}</b></span>`
@@ -194,7 +190,7 @@
     spectrum.innerHTML = sortedRaw.map(([name, qty]) => {
       const pct = totalUnits > 0 ? (qty / totalUnits * 100) : 0;
       const color = materialColors[name] || '#888';
-      return `<span style="width:${pct}%;background:${color}" title="${name} ${qty.toLocaleString()}"></span>`;
+      return `<span style="width:${Math.max(pct, 0.1)}%;background:${color}" title="${name} ${qty.toLocaleString()}"></span>`;
     }).join('');
 
     // 4b. Table
