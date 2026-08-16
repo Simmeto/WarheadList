@@ -1,0 +1,428 @@
+:root {
+  --ground: #15181A;
+  --panel: #1D2124;
+  --panel-2: #23282C;
+  --rule: #39413F;
+  --rule-soft: #2C3235;
+  --ink: #E4E7E4;
+  --ink-dim: #8B948F;
+  --ink-faint: #5D6764;
+
+  --m-copper: #C1703A;
+  --m-iron: #8C8177;
+  --m-silicon: #7B8FA1;
+  --m-flint: #565450;
+  --m-grass: #6E8C3A;
+  --m-stone: #A09A8E;
+  --m-titanium: #AEB7BC;
+  --m-quartz: #D8D3C4;
+  --m-sulfur: #D9B23A;
+  --m-plutonium: #5FC27E;
+  --m-beryllium: #7FA8A0;
+
+  --display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 32px 20px 64px;
+}
+
+.wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+/* ---------- HEADER ---------- */
+.head {
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 20px;
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0 0 6px;
+}
+
+h1 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(48px, 9vw, 86px);
+  letter-spacing: .02em;
+  line-height: .9;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.sub {
+  color: var(--ink-dim);
+  font-size: 13px;
+  margin-top: 10px;
+  max-width: 62ch;
+}
+
+/* ---------- ASSEMBLY ---------- */
+.assembly {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+  align-items: center;
+}
+
+.slot {
+  flex: 1 1 150px;
+  background: var(--panel);
+  border: 1px solid var(--rule-soft);
+  border-top: 2px solid var(--rule);
+  padding: 10px 12px;
+}
+
+.slot .n {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  display: block;
+  line-height: 1.1;
+}
+
+.slot .q {
+  font-size: 12px;
+  color: var(--ink-dim);
+  letter-spacing: .05em;
+}
+
+/* ---------- COUNTER ---------- */
+.counter {
+  background: var(--panel);
+  border: 1px solid var(--rule-soft);
+  border-top: 2px solid var(--rule);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.counter label {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--ink-dim);
+}
+
+.counter input {
+  background: var(--ground);
+  border: 1px solid var(--rule-soft);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 500;
+  width: 90px;
+  padding: 6px 8px;
+  text-align: center;
+  border-radius: 2px;
+}
+
+.counter input:focus {
+  outline: 1px solid var(--ink-dim);
+  border-color: var(--ink-dim);
+}
+
+.counter .hint {
+  font-size: 12px;
+  color: var(--ink-faint);
+  margin-left: auto;
+}
+
+/* ---------- BRANCHES ---------- */
+.branches {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.branch {
+  background: var(--panel);
+  border: 1px solid var(--rule-soft);
+  padding: 16px 18px 20px;
+}
+
+.branch > h2 {
+  font-family: var(--display);
+  font-size: 26px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin: 0 0 2px;
+  line-height: 1.1;
+}
+
+.branch > .bq {
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+/* ---------- TREE ---------- */
+.tree,
+.tree ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tree ul {
+  margin-left: 7px;
+  padding-left: 15px;
+  border-left: 1px solid var(--rule-soft);
+}
+
+.tree li {
+  position: relative;
+  padding: 2px 0;
+}
+
+.tree ul > li::before {
+  content: "";
+  position: absolute;
+  left: -15px;
+  top: 14px;
+  width: 11px;
+  height: 1px;
+  background: var(--rule-soft);
+}
+
+.tree ul > li:last-child::after {
+  content: "";
+  position: absolute;
+  left: -16px;
+  top: 15px;
+  bottom: 0;
+  width: 1px;
+  background: var(--panel);
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 1px;
+  transform: translateY(1px);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .35);
+}
+
+.nm {
+  letter-spacing: .01em;
+}
+
+.qt {
+  color: var(--ink-dim);
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+
+.craft > .row > .nm {
+  color: var(--ink);
+}
+
+.raw > .row > .nm {
+  color: var(--ink-dim);
+}
+
+.dash {
+  flex: 1;
+  border-bottom: 1px dotted var(--rule-soft);
+  transform: translateY(-3px);
+  min-width: 8px;
+}
+
+/* ---------- INTERMEDIATES ---------- */
+.mid {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--rule);
+}
+
+.chiprow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.chip {
+  background: var(--panel-2);
+  border: 1px solid var(--rule-soft);
+  padding: 4px 9px;
+  font-size: 12.5px;
+  color: var(--ink-dim);
+}
+
+.chip b {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* ---------- RAW MATERIALS ---------- */
+.raws {
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+}
+
+h2.sec {
+  font-family: var(--display);
+  font-size: 34px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin: 0;
+  line-height: 1;
+}
+
+.total {
+  font-size: 12px;
+  color: var(--ink-faint);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.spectrum {
+  display: flex;
+  height: 44px;
+  margin: 20px 0 6px;
+  overflow: hidden;
+}
+
+.spectrum span {
+  display: block;
+  height: 100%;
+  position: relative;
+}
+
+.spectrum span+span {
+  border-left: 1px solid var(--ground);
+}
+
+.axis {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: .1em;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 22px;
+  font-size: 13.5px;
+}
+
+th {
+  text-align: left;
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding: 0 10px 8px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+th.r,
+td.r {
+  text-align: right;
+  padding-right: 0;
+}
+
+td {
+  padding: 9px 10px 9px 0;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+td.mat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+td.num {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+td.pct {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-faint);
+  width: 70px;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+.note {
+  margin-top: 28px;
+  font-size: 12.5px;
+  color: var(--ink-faint);
+  max-width: 70ch;
+  line-height: 1.7;
+}
+
+.note b {
+  color: var(--ink-dim);
+  font-weight: 500;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 560px) {
+  body {
+    padding: 22px 14px 48px;
+  }
+  .slot {
+    flex: 1 1 100%;
+  }
+  .counter {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .counter .hint {
+    margin-left: 0;
+  }
+}

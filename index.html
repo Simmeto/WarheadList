@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Warhead Calculator — Waste of Space</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- ========== HEADER ========== -->
+    <header class="head">
+      <p class="eyebrow">Waste of Space · калькулятор крафта</p>
+      <h1>Warhead</h1>
+      <p class="sub">Пять компонентов верхнего уровня. Всё, что ниже — раскладка до сырья, которое придётся добывать руками.</p>
+
+      <!-- Assembly -->
+      <div class="assembly" id="assembly">
+        <!-- заполняется из data.js -->
+      </div>
+
+      <!-- Counter -->
+      <div class="counter">
+        <label for="warheadQty">Количество Warhead</label>
+        <input type="number" id="warheadQty" min="1" value="1" step="1">
+        <span class="hint">все количества пересчитаются</span>
+      </div>
+    </header>
+
+    <!-- ========== BRANCHES ========== -->
+    <div class="branches" id="branchesContainer">
+      <!-- заполняется из data.js -->
+    </div>
+
+    <!-- ========== INTERMEDIATES ========== -->
+    <section class="mid">
+      <p class="eyebrow" style="margin:0">Сколько чего скрафтить по пути</p>
+      <div class="chiprow" id="chipRow">
+        <!-- заполняется из data.js -->
+      </div>
+    </section>
+
+    <!-- ========== RAW MATERIALS ========== -->
+    <section class="raws">
+      <h2 class="sec">Сырьё — итог</h2>
+      <p class="total" id="rawTotal">0 единиц · 0 наименований</p>
+
+      <div class="spectrum" id="spectrum" role="img" aria-label="Доли сырья в общем объёме">
+        <!-- заполняется из data.js -->
+      </div>
+      <div class="axis"><span>больше всего</span><span>меньше всего</span></div>
+
+      <table>
+        <thead>
+          <tr><th>Ресурс</th><th class="r">Количество</th><th class="r">Доля</th></tr>
+        </thead>
+        <tbody id="rawTableBody">
+          <!-- заполняется из data.js -->
+        </tbody>
+      </table>
+
+      <p class="note">
+        Три ресурса — <b>Copper, Iron, Silicon</b> — это две трети всего объёма. Медь идёт почти целиком на Wire, кремний — на Polysilicon для Primer.
+        Считано по твоей схеме: количества у вложенных узлов взяты как есть.
+      </p>
+    </section>
+
+  </div>
+
+  <!-- ========== SCRIPTS ========== -->
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
